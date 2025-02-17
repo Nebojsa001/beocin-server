@@ -98,7 +98,10 @@ app.use("/api/v1/kosnica", viberRouter);
 
 app.all("*", (req, res, next) => {
   next(
-    new AppError(`Can't find ${req.originalUrl} on this server SRBIJA!`, 404)
+    new AppError(
+      `Can't find ${req.originalUrl} on this server SRBIJA_KOSOVO!`,
+      404
+    )
   );
 });
 
