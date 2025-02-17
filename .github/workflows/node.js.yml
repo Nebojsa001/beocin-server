@@ -25,7 +25,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             # Navigiraj u direktorijum gde želiš deploy
-            cd ${{ secrets.DEPLOY_PATH }}
+            cd ${{ secrets.SSH_PATH }}
 
             # Pullaj poslednje promene sa repozitorija
             git pull origin main
@@ -34,7 +34,7 @@ jobs:
             npm install 
 
             # Restartuj aplikaciju (pretpostavljamo da koristiš PM2)
-            pm2 restart 11
+            pm2 restart 12
 
             echo "Deploy završen!"
           EOF
