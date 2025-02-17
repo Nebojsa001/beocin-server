@@ -1,0 +1,40 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main # Promijeni ako koristiš drugu granu
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout koda iz GitHub repozitorija
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Postavljanje SSH ključa i autentifikacija
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Povezivanje na server i deploy aplikacije
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+            # Navigiraj u direktorijum gde želiš deploy
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Pullaj poslednje promene sa repozitorija
+            git pull origin main
+
+            # Instaliraj zavisnosti (ako koristiš Node.js, npr.)
+            npm install 
+
+            # Restartuj aplikaciju (pretpostavljamo da koristiš PM2)
+            pm2 restart 11
+
+            echo "Deploy završen!"
+          EOF
